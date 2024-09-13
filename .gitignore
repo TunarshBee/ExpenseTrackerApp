@@ -22,3 +22,6 @@ expo-env.d.ts
 # logs
 *-lock.json
 *.lock
+
+# Environments
+*.env

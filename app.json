@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expenseTacker",
-    "slug": "expenseTacker",
+    "name": "ExpenseTrackerApp",
+    "slug": "ExpenseTrackerApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
