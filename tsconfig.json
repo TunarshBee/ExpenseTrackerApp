@@ -12,6 +12,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
+    "global.d.ts",
+    "walletconnect.d.ts",
     "expo-env.d.ts"
   ]
 }
