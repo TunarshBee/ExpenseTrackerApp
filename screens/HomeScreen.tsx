@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, VStack, ScrollView, Text } from "native-base";
 import AddExpenseForm from "../components/AddExpenseForm";
 import ExpenseTable from "../components/ExpenseTable";
@@ -7,18 +7,22 @@ import WalletConnector from "../components/WalletConnector";
 import { useExpenses } from "../hooks/useExpenses";
 
 const HomeScreen: React.FC = () => {
-  const { expenses, addExpense, deleteExpense } = useExpenses();
+  const { expenses, addExpense, retrieveExpenses } = useExpenses();
 
-  const [filterCategory, setFilterCategory] = React.useState<string>("All");
-  const [categories, setCategories] = React.useState<string[]>([]);
+  const [filterCategory, setFilterCategory] = useState<string>("All");
+  const [categories, setCategories] = useState<string[]>([]);
 
-  React.useEffect(() => {
-    // Extract categories from expenses
+  useEffect(() => {
+    retrieveExpenses(); // Retrieve expenses when component mounts
+  });
+
+  useEffect(() => {
+    // Update categories based on current expenses
     const uniqueCategories = Array.from(
       new Set(expenses.map((exp) => exp.category))
     );
     setCategories(["All", ...uniqueCategories]);
-  }, [expenses]);
+  }, [expenses]); // Trigger whenever expenses update
 
   const filteredExpenses =
     filterCategory === "All"
@@ -31,8 +35,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <Box flex={1} p={4}>
-      <WalletConnector
-      />
+      <WalletConnector />
       <ScrollView flex={1}>
         <VStack space={4}>
           <Text>
@@ -51,16 +54,13 @@ const HomeScreen: React.FC = () => {
 
           {/* Add Expense Form */}
           <AddExpenseForm
-            addExpense={addExpense}
             availableCategories={categories}
+            addExpense={addExpense} // Pass the addExpense function
             addCategory={(category) => setCategories([...categories, category])}
           />
 
           {/* Expense Table */}
-          <ExpenseTable
-            expenses={filteredExpenses}
-            deleteExpense={deleteExpense}
-          />
+          <ExpenseTable expenses={filteredExpenses} />
         </VStack>
       </ScrollView>
     </Box>

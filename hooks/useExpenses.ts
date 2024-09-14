@@ -1,64 +1,51 @@
-import { useState, useEffect, useCallback } from "react";
+import { type Expense } from "@/types/Expense.types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Expense } from "../types/Expense.types";
+import { useState } from "react";
+
+const simulateBlockchainInteraction = async (expense: Expense) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Transaction Successful");
+    }, 2000);
+  });
+};
 
 export const useExpenses = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Load expenses from AsyncStorage
-  const loadExpenses = useCallback(async () => {
+  const addExpense = async (newExpense: Expense) => {
+    setLoading(true);
     try {
-      const savedExpenses = await AsyncStorage.getItem("expenses");
-      if (savedExpenses) {
-        setExpenses(JSON.parse(savedExpenses));
+      const transactionMessage = await simulateBlockchainInteraction(newExpense);
+      const updatedExpenses = [...expenses, newExpense];
+      setExpenses(updatedExpenses);
+      await AsyncStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+      alert(transactionMessage);
+    } catch (error) {
+      alert("Error storing expense on the blockchain");
+      console.log(error)
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const retrieveExpenses = async () => {
+    setLoading(true);
+    try {
+      const storedExpenses = await AsyncStorage.getItem("expenses");
+      if (storedExpenses) {
+        setExpenses(JSON.parse(storedExpenses));
+      } else {
+        setExpenses([]);
       }
     } catch (error) {
-      console.error("Error loading expenses:", error);
+      alert("Error retrieving expenses from the blockchain");
+      console.log(error)
+    } finally {
+      setLoading(false);
     }
-  }, []);
-
-  useEffect(() => {
-    loadExpenses();
-  }, [loadExpenses]);
-
-  // Save expenses to AsyncStorage
-  const saveExpenses = useCallback(async (expenses: Expense[]) => {
-    try {
-      await AsyncStorage.setItem("expenses", JSON.stringify(expenses));
-    } catch (error) {
-      console.error("Error saving expenses:", error);
-    }
-  }, []);
-
-  // Add a new expense
-  const addExpense = useCallback(
-    (expense: Expense) => {
-      setExpenses((prevExpenses) => {
-        const updatedExpenses = [...prevExpenses, expense];
-        saveExpenses(updatedExpenses);
-        return updatedExpenses;
-      });
-    },
-    [saveExpenses]
-  );
-
-  // Delete an expense by ID
-  const deleteExpense = useCallback(
-    (id: number) => {
-      setExpenses((prevExpenses) => {
-        const updatedExpenses = prevExpenses.filter(
-          (expense) => expense.id !== id
-        );
-        saveExpenses(updatedExpenses);
-        return updatedExpenses;
-      });
-    },
-    [saveExpenses]
-  );
-
-  return {
-    expenses,
-    addExpense,
-    deleteExpense,
   };
+
+  return { expenses, addExpense, retrieveExpenses, loading };
 };
