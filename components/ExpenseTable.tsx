@@ -14,7 +14,7 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({
 
   useEffect(() => {
     retrieveExpenses(); // Simulate fetching expenses from the blockchain
-  });
+  },[]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#00ff00" />;

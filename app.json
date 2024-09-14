@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ExpenseTrackerApp",
-    "slug": "task-tracker",
+    "name": "expenseTacker",
+    "slug": "expenseTacker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -31,15 +31,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "aeed5141-f198-4db1-b17e-f90ce671ba17"
-      }
-    },
-    "owner": "devsanbee"
+    }
   }
 }

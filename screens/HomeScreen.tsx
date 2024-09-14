@@ -12,9 +12,9 @@ const HomeScreen: React.FC = () => {
   const [filterCategory, setFilterCategory] = useState<string>("All");
   const [categories, setCategories] = useState<string[]>([]);
 
-  useEffect(() => {
-    retrieveExpenses(); // Retrieve expenses when component mounts
-  });
+  // useEffect(() => {
+  //   retrieveExpenses(); // Retrieve expenses when component mounts
+  // });
 
   useEffect(() => {
     // Update categories based on current expenses

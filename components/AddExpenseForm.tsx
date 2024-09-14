@@ -4,6 +4,7 @@ import { Expense } from "../types/Expense.types";
 import { useExpenses } from "@/hooks/useExpenses";
 import { ActivityIndicator } from "react-native";
 import FilterSelect from "./FilterSelect";
+import { generateShortId } from "@/utils/uuid";
 
 interface AddExpenseFormProps {
   addExpense: (expense: Expense) => void;
@@ -23,11 +24,7 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
   const [isFormValid, setIsFormValid] = useState(false);
   const { loading } = useExpenses();
   useEffect(() => {
-    if (
-      description.trim() !== "" &&
-      amount.trim() !== "" &&
-      (category || newCategory)
-    ) {
+    if (description && amount && (category || newCategory)) {
       setIsFormValid(true);
     }
   }, [description, amount, category, newCategory]);
@@ -41,13 +38,13 @@ const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
     }
 
     const newExpense: Expense = {
-      id: Date.now(),
+      id: generateShortId() as any,
       description,
       amount: parseFloat(amount),
       category: selectedCategory as string,
     };
 
-    addExpense(newExpense); // Call the function passed from HomeScreen to add the expense
+    addExpense(newExpense);
 
     setDescription("");
     setAmount("");
